@@ -29,7 +29,7 @@ class PasswordQuestionHelper
         $password = $this->helper->readline($msg);
         $this->showInput();
 
-        print "\n";
+        $this->helper->writeln();
         if (empty($password)) {
             return $this->ask($msg);
         }

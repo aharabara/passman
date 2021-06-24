@@ -24,9 +24,10 @@ class LoadingAndSavingTest extends TestCase
 
         $loader = new EncryptedLoader(
             new Encryptor($encryptionKey),
-            $filesystem ?? new Filesystem
+            $filesystem ?? new Filesystem,
+            $pathToPasswords
         );
-        $passwords = $loader->load($pathToPasswords);
+        $passwords = $loader->load();
 
         self::assertEquals($content, $passwords);
     }
@@ -50,9 +51,10 @@ class LoadingAndSavingTest extends TestCase
 
         $loader = new EncryptedLoader(
             new Encryptor($encryptionKey),
-            $filesystem ?? new Filesystem
+            $filesystem ?? new Filesystem,
+            $pathToPasswords
         );
-        $loader->load($pathToPasswords);
+        $loader->load();
     }
 
 
@@ -66,8 +68,8 @@ class LoadingAndSavingTest extends TestCase
             ->with($pathToPasswords)
             ->willReturn("");
 
-        $loader = new EncryptedLoader(new Encryptor($encryptionKey), $filesystem);
-        $passwords = $loader->load($pathToPasswords);
+        $loader = new EncryptedLoader(new Encryptor($encryptionKey), $filesystem, $pathToPasswords);
+        $passwords = $loader->load();
         self::assertEmpty($passwords);
     }
 
@@ -88,8 +90,8 @@ class LoadingAndSavingTest extends TestCase
                 self::assertEquals($content, $encryptedContent);
             });
 
-        $loader = new EncryptedLoader(new Encryptor($encryptionKey), $filesystem);
-        $loader->save($pathToPasswords, $content);
+        $loader = new EncryptedLoader(new Encryptor($encryptionKey), $filesystem, $pathToPasswords);
+        $loader->save($content);
 
     }
 

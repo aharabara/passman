@@ -5,9 +5,6 @@
     "autoload": {
         "psr-4": {
             "Passman\\": "src"
-        },
-        "files": [
-            "functions.php"
-        ]
+        }
     }
 }

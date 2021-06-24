@@ -8,19 +8,21 @@ class EncryptedLoader
 {
     private Encryptor $encryptor;
     private Filesystem $filesystem;
+    private string $filePath;
 
-    public function __construct(Encryptor $encryptor, Filesystem $filesystem)
+    public function __construct(Encryptor $encryptor, Filesystem $filesystem, string $filePath)
     {
         $this->encryptor = $encryptor;
         $this->filesystem = $filesystem;
+        $this->filePath = $filePath;
     }
 
 
-    public function load(string $filePath): array
+    public function load(): array
     {
         $content = $this
             ->filesystem
-            ->get($filePath);
+            ->get($this->filePath);
 
         if (empty($content)) {
             return [];
@@ -33,7 +35,7 @@ class EncryptedLoader
     }
 
 
-    public function save(string $filePath, array $data): void
+    public function save(array $data): void
     {
         $encryptedContent = $this
             ->encryptor
@@ -41,7 +43,11 @@ class EncryptedLoader
 
         $this
             ->filesystem
-            ->put($filePath, $encryptedContent);
+            ->put($this->filePath, $encryptedContent);
     }
 
+    public function getPath(): string
+    {
+        return $this->filePath;
+    }
 }
