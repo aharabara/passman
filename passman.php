@@ -1,26 +1,33 @@
 #!/usr/bin/env php
 <?php
+
+use Passman\ConsoleHelper;
+
 require __DIR__ . "/vendor/autoload.php";
 
 $path = './.passman';
 
 touch($path);
-$passman = new Passman\Passman($path);
-
-if ($argc < 2) {
-    die($passman->getUsage());
-}
+$console = new ConsoleHelper();
+$passman = new Passman\Passman($path, $console);
 
 # restricted to
-# - show any password except `passamn get`
+# - show any password except `passaman get`
 # - don't store plain password
 //$fileWithPasswords = getenv('HOME') . '/.config/passman';
 
 
-[$file, $command, $alias] = array_pad($argv, 3, '');
-
-try {
-    ($passman)->execute($command, $alias);
-} catch (Throwable $e) {
-    die($e->getMessage() . PHP_EOL);
+while ($content = readline("#>")) {
+    try {
+        $args = explode(" ", $content);
+        [$command, $alias] = array_pad($args, 2, '');
+        if (empty($command)) {
+            continue;
+        }
+        ($passman)->execute($command, $alias);
+    } catch (Throwable $e) {
+        $console->error($e->getMessage());
+    }
 }
+$console->writeln("Good bye.");
+

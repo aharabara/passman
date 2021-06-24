@@ -10,9 +10,9 @@ class Passman
     private PasswordQuestionHelper $passHelper;
     private EncryptedLoader $encryptedLoader;
 
-    public function __construct(string $fileWithPasswords)
+    public function __construct(string $fileWithPasswords, ConsoleHelper $consoleHelper)
     {
-        $this->consoleHelper = new ConsoleHelper();
+        $this->consoleHelper = $consoleHelper;
         $this->passHelper = new PasswordQuestionHelper($this->consoleHelper);
 
         $this->encryptedLoader = $this->createEncryptedLoader($fileWithPasswords, "Master password:");
@@ -30,8 +30,7 @@ class Passman
                 break;
             case 'change-masterpass':
                 $this->changeMasterPassword();
-                die("Done.\n");
-
+                $console->writeln("Done.");
             case 'get':
                 $pass = $this->getPassword($alias);
                 $console->writeln("Password: " . $pass);
@@ -42,12 +41,13 @@ class Passman
                 foreach ($aliases as $alias) {
                     $console->writeln(" - $alias");
                 }
-
                 break;
-
             case 'copy':
                 $console->copy($this->getPassword($alias));
                 $console->writeln("Copied.");
+                break;
+            case 'help':
+                $console->writeln($this->getUsage());
                 break;
             default:
                 throw new LogicException("No such command.");

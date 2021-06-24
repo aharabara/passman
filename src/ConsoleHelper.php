@@ -28,5 +28,12 @@ class ConsoleHelper
         print $content . PHP_EOL;
     }
 
+    public function error(string $content = ""): void
+    {
+        $red = "\e[0;31m";
+        $nc = "\e[0m";
+        print "{$red}$content{$nc}" . PHP_EOL;
+    }
+
 
 }
